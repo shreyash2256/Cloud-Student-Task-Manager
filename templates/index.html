@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cloud-Based Student Task Manager built with Flask, Google Cloud Run, and Google Cloud Firestore for GMIU Practical Examination.">
+    <meta name="theme-color" content="#0F172A">
+    <title>Cloud-Based Student Task Manager | GMIU Practical</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Background glow ambient effect -->
+    <div class="ambient-glow glow-1" aria-hidden="true"></div>
+    <div class="ambient-glow glow-2" aria-hidden="true"></div>
+
+    <!-- Application Shell -->
+    <div class="app-container">
+        
+        <!-- Header & Cloud Status Navigation -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="brand-logo">
+                    <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                        <polyline points="13 11 10 14 8 12"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title">Student Task Manager</h1>
+                    <div class="academic-badge">
+                        <span class="badge-dot"></span>
+                        <span>GMIU Practical Examination &bull; Cloud Computing</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <!-- Cloud Status Badges -->
+                <div class="cloud-pills">
+                    <div id="computeStatusPill" class="cloud-pill compute-pill" title="Compute service: Cloud Edge & Cloud Run Container">
+                        <span class="pill-dot pulse"></span>
+                        <span class="pill-text">Cloud Run (Active)</span>
+                    </div>
+                    <div id="databaseStatusPill" class="cloud-pill database-pill" title="Database service: Real Cloud Database & Firestore">
+                        <span class="pill-dot pill-dot-green" id="dbStatusDot"></span>
+                        <span class="pill-text" id="dbStatusText">Cloud Firestore: Connected (Live)</span>
+                    </div>
+                    <a href="https://grip-judicial-ending-chances.trycloudflare.com" target="_blank" rel="noopener" class="cloud-pill" style="border-color: rgba(99, 102, 241, 0.5); background: rgba(99, 102, 241, 0.15); text-decoration: none; color: #a5b4fc; display: inline-flex; align-items: center; gap: 6px;" title="Open live public internet link (accessible from any mobile or laptop)">
+                        <span class="pill-dot" style="background: #6366f1; box-shadow: 0 0 8px #6366f1;"></span>
+                        <span class="pill-text">🌐 Public Internet URL</span>
+                    </a>
+                </div>
+
+                <!-- Diagnostics Button -->
+                <button id="diagnosticsBtn" class="btn btn-secondary btn-icon-only" title="View Cloud Architecture & Diagnostics" aria-label="Cloud Diagnostics">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Firestore Unconfigured Alert Banner (shown only when DB is offline) -->
+        <section id="firestoreAlertBanner" class="alert-banner hidden" role="alert">
+            <div class="alert-content">
+                <div class="alert-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <div class="alert-body">
+                    <h3 class="alert-title">Google Cloud Firestore Configuration Notice</h3>
+                    <p class="alert-text" id="firestoreAlertDetails">
+                        Firestore database is not connected. The application requires Google Cloud Firestore for persistent storage.
+                    </p>
+                    <div class="alert-actions">
+                        <button id="showSetupHelpBtn" class="btn btn-sm btn-outline">Cloud Run Setup Guide</button>
+                        <button id="retryConnectionBtn" class="btn btn-sm btn-primary">Check Cloud Connection</button>
+                        <button id="dismissAlertBtn" class="btn btn-sm btn-secondary" title="Dismiss notice and continue local testing">Dismiss Notice</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Dashboard Stats Counter Cards -->
+            <section class="dashboard-stats" aria-label="Task Statistics">
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper stat-total">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect width="18" height="18" x="3" y="3" rx="2"/>
+                            <path d="M7 7h10M7 12h10M7 17h10"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Tasks</span>
+                        <span id="statTotalCount" class="stat-value">0</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper stat-pending">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Pending Tasks</span>
+                        <span id="statPendingCount" class="stat-value">0</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper stat-completed">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Completed Tasks</span>
+                        <span id="statCompletedCount" class="stat-value">0</span>
+                    </div>
+                </div>
+
+                <div class="stat-card progress-stat-card">
+                    <div class="progress-info-row">
+                        <span class="stat-label">Completion Rate</span>
+                        <span id="statProgressPercentage" class="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="statProgressBar" class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="stat-subtext">Stored in Cloud Firestore</span>
+                </div>
+            </section>
+
+            <!-- Action & Filter Bar -->
+            <section class="controls-section" aria-label="Search and Filter Controls">
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search tasks by title, subject or description..." autocomplete="off">
+                    <button id="clearSearchBtn" class="clear-btn hidden" aria-label="Clear search">&times;</button>
+                </div>
+
+                <div class="filter-controls">
+                    <!-- Status Filter -->
+                    <div class="filter-group">
+                        <label for="statusFilter" class="filter-label">Status:</label>
+                        <select id="statusFilter" class="custom-select">
+                            <option value="all">All Tasks</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <!-- Priority Filter -->
+                    <div class="filter-group">
+                        <label for="priorityFilter" class="filter-label">Priority:</label>
+                        <select id="priorityFilter" class="custom-select">
+                            <option value="all">All Priorities</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+
+                    <!-- Add Task Primary Button -->
+                    <button id="openAddTaskModalBtn" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        <span>Add New Task</span>
+                    </button>
+
+                    <!-- Seed Demo Tasks Button -->
+                    <button id="seedSamplesBtn" class="btn btn-secondary" title="Write sample tasks directly to Cloud Firestore">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        <span>Load Sample Tasks</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Tasks Container -->
+            <section class="tasks-section" aria-label="Tasks List">
+                <div class="tasks-header">
+                    <h2 class="section-title">Saved Student Tasks</h2>
+                    <span id="filteredCountBadge" class="count-badge">0 tasks</span>
+                </div>
+
+                <!-- Loading State Spinner -->
+                <div id="loadingState" class="state-container">
+                    <div class="spinner"></div>
+                    <p>Connecting to Google Cloud Firestore...</p>
+                </div>
+
+                <!-- Empty State (No Tasks) -->
+                <div id="emptyState" class="state-container hidden">
+                    <div class="empty-icon-wrap">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <line x1="9" y1="15" x2="15" y2="15"/>
+                        </svg>
+                    </div>
+                    <h3 class="state-title">No tasks found</h3>
+                    <p class="state-description" id="emptyStateDesc">Get started by creating your first task or load realistic practical samples into Cloud Firestore.</p>
+                    <button id="emptyStateCreateBtn" class="btn btn-primary">+ Create First Task</button>
+                </div>
+
+                <!-- Tasks Cards Grid -->
+                <div id="tasksGrid" class="tasks-grid">
+                    <!-- Task cards are dynamically injected here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h4>Cloud-Based Student Task Manager</h4>
+                    <p>GMIU Practical Examination &bull; Cloud Computing Laboratory Project</p>
+                </div>
+                <div class="footer-stack">
+                    <div class="stack-badge">Compute: <strong>Google Cloud Run</strong></div>
+                    <div class="stack-badge">Database: <strong>Google Cloud Firestore</strong></div>
+                    <div class="stack-badge">Region: <strong>asia-south1 (Mumbai)</strong></div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Academic Practical Submission. Built for Demonstration of Cloud Compute, Storage, and Resource Management.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- Modals -->
+    <!-- ========================================================================= -->
+
+    <!-- Add / Edit Task Modal -->
+    <div id="taskModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-heading">Add New Task</h3>
+                <button id="closeModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+            </div>
+            
+            <form id="taskForm" class="modal-form" novalidate>
+                <input type="hidden" id="taskIdInput">
+                
+                <div class="form-group">
+                    <label for="taskTitleInput" class="form-label">Task Title <span class="required-star">*</span></label>
+                    <input type="text" id="taskTitleInput" class="form-input" placeholder="e.g. Complete Cloud Computing Assignment 2" required maxlength="120">
+                    <span class="form-hint">Enter a clear, descriptive title for this academic task.</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskSubjectInput" class="form-label">Subject / Course</label>
+                        <input type="text" id="taskSubjectInput" class="form-input" list="subjectSuggestions" placeholder="e.g. Cloud Computing" maxlength="60">
+                        <datalist id="subjectSuggestions">
+                            <option value="Cloud Computing">
+                            <option value="Operating Systems">
+                            <option value="Computer Networks">
+                            <option value="Database Management (DBMS)">
+                            <option value="Web Technologies">
+                            <option value="Python Programming">
+                            <option value="Software Engineering">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskPriorityInput" class="form-label">Priority Level</label>
+                        <select id="taskPriorityInput" class="form-select">
+                            <option value="Low">Low Priority</option>
+                            <option value="Medium" selected>Medium Priority</option>
+                            <option value="High">High Priority</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDueDateInput" class="form-label">Due Date</label>
+                    <input type="date" id="taskDueDateInput" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDescriptionInput" class="form-label">Description / Instructions</label>
+                    <textarea id="taskDescriptionInput" class="form-textarea" rows="3" placeholder="Provide additional details, assignment instructions, or submission requirements..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancelModalBtn" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" id="submitTaskBtn" class="btn btn-primary">
+                        <span id="submitBtnText">Save to Cloud Firestore</span>
+                        <span id="submitBtnSpinner" class="btn-spinner hidden"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+        <div class="modal-card modal-card-sm">
+            <div class="modal-header">
+                <h3 id="deleteModalTitle" class="modal-heading">Confirm Task Deletion</h3>
+                <button id="closeDeleteModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to permanently delete this task from Google Cloud Firestore?</p>
+                <div class="delete-task-preview" id="deleteTaskTitlePreview">"Task Title"</div>
+                <p class="text-muted text-sm">This action immediately deletes the document from the cloud collection and cannot be undone.</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">Cancel</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">
+                    <span>Delete Task</span>
+                    <span id="deleteSpinner" class="btn-spinner hidden"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cloud Diagnostics & Architecture Modal -->
+    <div id="diagnosticsModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="diagModalTitle">
+        <div class="modal-card modal-card-lg">
+            <div class="modal-header">
+                <h3 id="diagModalTitle" class="modal-heading">Cloud Architecture & Diagnostics</h3>
+                <button id="closeDiagModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="diagnostics-content">
+                <div class="diag-section">
+                    <h4>Cloud Computing Stack (GMIU Practical)</h4>
+                    <div class="diag-grid">
+                        <div class="diag-item">
+                            <span class="diag-key">Compute Service:</span>
+                            <span class="diag-val" id="diagCompute">Google Cloud Run (Serverless Container)</span>
+                        </div>
+                        <div class="diag-item">
+                            <span class="diag-key">Database Service:</span>
+                            <span class="diag-val" id="diagDatabase">Google Cloud Firestore (Native NoSQL)</span>
+                        </div>
+                        <div class="diag-item">
+                            <span class="diag-key">Service Name:</span>
+                            <span class="diag-val" id="diagService">{{ service_name }}</span>
+                        </div>
+                        <div class="diag-item">
+                            <span class="diag-key">Google Cloud Region:</span>
+                            <span class="diag-val" id="diagRegion">{{ region }}</span>
+                        </div>
+                        <div class="diag-item">
+                            <span class="diag-key">Firestore Project ID:</span>
+                            <span class="diag-val" id="diagProjectId">{{ project_id }}</span>
+                        </div>
+                        <div class="diag-item">
+                            <span class="diag-key">Firestore Collection:</span>
+                            <span class="diag-val">tasks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="diag-section">
+                    <h4>Cloud Architecture Overview</h4>
+                    <div class="architecture-diagram-box">
+                        <pre class="ascii-diagram">
++------------------+         HTTPS (Public URL)         +--------------------------------+
+|  Student Browser |  ===============================>  |  Google Cloud Run Service      |
+|  (Desktop/Mobile)|                                    |  (Container: Python 3.11/Flask)|
++------------------+                                    +--------------------------------+
+                                                                     |
+                                                                     | Google Cloud IAM (Least Privilege)
+                                                                     v
+                                                        +--------------------------------+
+                                                        |  Google Cloud Firestore        |
+                                                        |  (NoSQL tasks collection)      |
+                                                        +--------------------------------+
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="diag-section">
+                    <h4>Database Connectivity Message</h4>
+                    <div id="diagDbMessage" class="code-block">Verifying database status...</div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="closeDiagBtn" class="btn btn-primary">Close Diagnostics</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firestore Setup Instructions Modal -->
+    <div id="setupHelpModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="setupModalTitle">
+        <div class="modal-card modal-card-lg">
+            <div class="modal-header">
+                <h3 id="setupModalTitle" class="modal-heading">How to Connect Google Cloud Firestore</h3>
+                <button id="closeSetupHelpBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body setup-instructions-body">
+                <p>This project uses <strong>Google Cloud Firestore</strong> as the persistent cloud database. Follow either option below:</p>
+                
+                <div class="setup-option-card">
+                    <h4>Option A: Deploy to Google Cloud Run (Recommended for Practical Exam)</h4>
+                    <p>When deployed on Google Cloud Run, authentication is completely automatic! The Cloud Run container uses its attached Service Account identity.</p>
+                    <ol class="setup-steps">
+                        <li>Create or select your GCP project in the Google Cloud Console.</li>
+                        <li>Create a Firestore database in Native mode (Region: <code>asia-south1</code>).</li>
+                        <li>Deploy with command:
+                            <pre class="code-block">gcloud run deploy student-task-manager --source . --region asia-south1 --allow-unauthenticated</pre>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="setup-option-card">
+                    <h4>Option B: Connect Locally for Development</h4>
+                    <ol class="setup-steps">
+                        <li>In GCP Console, go to <strong>IAM & Admin &gt; Service Accounts</strong>.</li>
+                        <li>Create a service account with role <strong>Cloud Datastore User</strong>.</li>
+                        <li>Download its JSON key file and set environment variable:
+                            <pre class="code-block"># In Windows PowerShell:
+$env:GOOGLE_APPLICATION_CREDENTIALS = "d:\path\to\service-account.json"
+$env:GCP_PROJECT_ID = "your-gcp-project-id"
+python app.py</pre>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="closeSetupBtn" class="btn btn-primary">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Toast Notification System -->
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- JavaScript Application Logic -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

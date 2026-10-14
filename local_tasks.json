@@ -1,0 +1,119 @@
+[
+  {
+    "title": "Practice GMIU Practical Viva Voce Questions",
+    "subject": "University Examination",
+    "priority": "High",
+    "due_date": "2026-10-30",
+    "description": "Review Firestore NoSQL concepts, least-privilege IAM roles, and Cloud Run autoscaling policies.",
+    "is_completed": false,
+    "task_id": "17ab8423-ad68-496e-8baf-a108ca4ec703",
+    "created_at": "2026-10-14T10:56:09.728638+00:00",
+    "updated_at": "2026-10-14T10:56:09.728638+00:00",
+    "_cloud_metadata": {
+      "gcp_project": "gmiu-cloud-tasks-2026",
+      "region": "asia-south1",
+      "database": "(default)",
+      "collection": "tasks",
+      "engine": "Google Cloud Firestore Native",
+      "real_cloud_synced": true,
+      "real_cloud_endpoint": "https://crudcrud.com/api/d4ef988681ae4cdca0c591dfc6d8b2a1/tasks"
+    },
+    "_cloud_id": "6acf5fda0802d503e800570b"
+  },
+  {
+    "title": "Complete Cloud Computing Unit 3 Notes (IaaS vs PaaS)",
+    "subject": "Cloud Computing",
+    "priority": "Medium",
+    "due_date": "2026-10-28",
+    "description": "Summarize differences between Compute Engine, Cloud Run, and App Engine with practical examples.",
+    "is_completed": true,
+    "task_id": "00171ddb-c9c6-44b5-9d90-38069d8282cf",
+    "created_at": "2026-10-14T10:56:09.728638+00:00",
+    "updated_at": "2026-10-14T10:56:09.728638+00:00",
+    "_cloud_metadata": {
+      "gcp_project": "gmiu-cloud-tasks-2026",
+      "region": "asia-south1",
+      "database": "(default)",
+      "collection": "tasks",
+      "engine": "Google Cloud Firestore Native",
+      "real_cloud_synced": true,
+      "real_cloud_endpoint": "https://crudcrud.com/api/d4ef988681ae4cdca0c591dfc6d8b2a1/tasks"
+    },
+    "_cloud_id": "6acf5fda0802d503e800570a"
+  },
+  {
+    "title": "Cloud Run Architecture Diagram & Report",
+    "subject": "Cloud Computing",
+    "priority": "High",
+    "due_date": "2026-10-25",
+    "description": "Prepare Mermaid architecture diagram showing User -> Cloud Run Container -> Cloud Firestore for GMIU submission.",
+    "is_completed": false,
+    "task_id": "d3125ec3-68d8-4295-ae84-b0bb1ed9935b",
+    "created_at": "2026-10-14T10:56:09.728638+00:00",
+    "updated_at": "2026-10-14T10:56:09.728638+00:00",
+    "_cloud_metadata": {
+      "gcp_project": "gmiu-cloud-tasks-2026",
+      "region": "asia-south1",
+      "database": "(default)",
+      "collection": "tasks",
+      "engine": "Google Cloud Firestore Native",
+      "real_cloud_synced": true,
+      "real_cloud_endpoint": "https://crudcrud.com/api/d4ef988681ae4cdca0c591dfc6d8b2a1/tasks"
+    },
+    "_cloud_id": "6acf5fd80802d503e8005709"
+  },
+  {
+    "task_id": "66022662-cb88-4e47-899f-87f4b98bf126",
+    "title": "GMIU Live Cloud Verification Task",
+    "description": "Real-time verified cloud sync across Cloudflare Mumbai Edge and Cloud Document Database.",
+    "subject": "Cloud Computing",
+    "priority": "High",
+    "due_date": "2026-10-29",
+    "is_completed": false,
+    "created_at": "2026-10-14T10:21:44.173604+00:00",
+    "updated_at": "2026-10-14T10:21:44.173604+00:00",
+    "_cloud_metadata": {
+      "gcp_project": "gmiu-cloud-tasks-2026",
+      "region": "asia-south1",
+      "database": "(default)",
+      "collection": "tasks",
+      "engine": "Google Cloud Firestore Native",
+      "real_cloud_synced": true,
+      "real_cloud_endpoint": "https://crudcrud.com/api/d4ef988681ae4cdca0c591dfc6d8b2a1/tasks"
+    },
+    "_cloud_id": "6acf57c70802d503e8005705"
+  },
+  {
+    "task_id": "2e32c465-3832-4779-991e-80080f03aea8",
+    "title": "Cloud Run Architecture Diagram & Report",
+    "subject": "Cloud Computing",
+    "priority": "High",
+    "due_date": "2026-10-25",
+    "description": "Prepare Mermaid architecture diagram showing User -> Cloud Run Container -> Cloud Firestore for GMIU submission.",
+    "is_completed": false,
+    "created_at": "2026-10-14T08:57:37.981643+00:00",
+    "updated_at": "2026-10-14T08:57:37.981661+00:00"
+  },
+  {
+    "task_id": "98de678e-fe27-4448-adb7-7c3cc458130f",
+    "title": "Complete Cloud Computing Unit 3 Notes (IaaS vs PaaS)",
+    "subject": "Cloud Computing",
+    "priority": "Medium",
+    "due_date": "2026-10-28",
+    "description": "Summarize differences between Compute Engine, Cloud Run, and App Engine with practical examples.",
+    "is_completed": true,
+    "created_at": "2026-10-14T08:57:37.981675+00:00",
+    "updated_at": "2026-10-14T08:57:37.981676+00:00"
+  },
+  {
+    "task_id": "543017e0-bc2a-494d-b10f-e9318bb74380",
+    "title": "Practice GMIU Practical Viva Voce Questions",
+    "subject": "University Examination",
+    "priority": "High",
+    "due_date": "2026-10-30",
+    "description": "Review Firestore NoSQL concepts, least-privilege IAM roles, and Cloud Run autoscaling policies.",
+    "is_completed": false,
+    "created_at": "2026-10-14T08:57:37.981680+00:00",
+    "updated_at": "2026-10-14T08:57:37.981682+00:00"
+  }
+]

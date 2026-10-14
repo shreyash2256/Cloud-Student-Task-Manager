@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment and credentials
+.env
+*.json.key
+service-account.json
+credentials.json
+firebase-key.json
+
+# Local portable binaries
+cloudflared.exe
+git/
+
+# Submission archives (optional, keep if needed)
+*.zip
