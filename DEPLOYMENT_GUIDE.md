@@ -112,11 +112,11 @@ gcloud services enable \
 This method is the fastest for university exams because it does not require installing Docker or Google Cloud SDK on your personal laptop.
 
 1. In the Google Cloud Console, click the **Activate Cloud Shell** icon `[>_]` in the top right.
-2. Clone or upload your project folder `CC-ALA-1` to Cloud Shell.
+2. Clone or upload your project folder `Cloud-Student-Task-Manager` to Cloud Shell.
    - *Option:* Click the three dots `⋮` in Cloud Shell and select **Upload > Upload Folder / Zip**.
 3. Navigate into the project folder:
    ```bash
-   cd CC-ALA-1
+   cd Cloud-Student-Task-Manager
    ```
 4. Deploy the application to Cloud Run using a single command:
    ```bash
@@ -143,7 +143,7 @@ This method is the fastest for university exams because it does not require inst
 
 ### Method B: Local Google Cloud CLI Deployment
 If you have `gcloud` installed locally:
-1. Open PowerShell / Terminal in `d:\CC-ALA-1`.
+1. Open PowerShell / Terminal in `Cloud-Student-Task-Manager`.
 2. Authenticate:
    ```bash
    gcloud auth login

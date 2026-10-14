@@ -48,7 +48,7 @@ flowchart LR
 ## File Structure
 
 ```
-CC-ALA-1/
+Cloud-Student-Task-Manager/
 ├── app.py                  # Main Flask application and Firestore REST API
 ├── requirements.txt        # Python production dependencies
 ├── Dockerfile              # Production multi-threaded container definition
